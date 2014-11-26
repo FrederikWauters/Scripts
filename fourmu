@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ $# -ne 4 ] ; then
+  echo "Usage: fourmu run1 run2 run3 run4"
+  echo "Runs run_mu.sh on the sequence of runs"
+  exit 1
+fi
+
+source ~/.bashrc
+
+for i in $1 $2 $3 $4; do
+  # Write to log and stdout, start each process in screen
+  echo "${HOSTNAME:0:5}: screen -d -m -S mu$i ./run_mu.sh $i" | tee -a ~/.fourmta/log
+  #screen -d -m -S mta$i ./run_mta.sh $i
+  cmd="screen -d -m -S mu$i ./run_mu.sh $i"
+  echo "Starting mu as [$cmd]..."
+  $cmd 1>$run.log
+  stty sane
+
+  sleep 10;
+done
+

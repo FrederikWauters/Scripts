@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $# -lt 1 ] ; then
+  echo "Usage: multimurange datasetfile"
+  echo "Batch queues fourmu jobs"
+  exit 1
+fi
+
+inputfile=$1
+
+while read number1 && read number2 && read number3 && read number4 
+do
+  filename="fourmurange$number1"
+  echo -n "" > $filename
+  echo "#!/bin/bash" >> $filename
+  echo "./fourmu $number1 $number2 $number3 $number4"  >> $filename; chmod 755 $filename
+  read command < $filename
+  echo "$command"
+  echo $filename
+  at -qb -f $filename now
+  #echo "$filename" | batch 
+  #rm $filename
+  sleep 80
+done < $inputfile
